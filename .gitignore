@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+.env
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Large data: full dataset is shared via a download link (see data/README.md).
+# Only a small sample is tracked in git.
+data/raw/
+data/processed/
+data/train/
+data/val/
+data/test/
+
+# Trained weights: track only the final submitted model (use git add -f)
+models/*
+!models/.gitkeep

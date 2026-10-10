@@ -1,0 +1,10 @@
+numpy
+opencv-python
+scikit-learn
+matplotlib
+seaborn
+Pillow
+# Choose ONE deep learning framework once the model decision is made:
+# tensorflow
+# torch
+# torchvision
