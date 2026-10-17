@@ -38,6 +38,7 @@ def assign_splits(object_keys, fractions, rng):
 
 
 def main():
+    """Runs the checker first and refuses to continue if errors. Then splits each class, double-checks that no objects landed in two splits, writes data/manifest.csv (one row per image with its split) and data/split_summary.csv (counts)"""
     parser = argparse.ArgumentParser(description="Create the dataset manifest and split.")
     parser.add_argument("--config", default="configuration.yaml")
     parser.add_argument("--force", action="store_true", help="ignore checker errors")
