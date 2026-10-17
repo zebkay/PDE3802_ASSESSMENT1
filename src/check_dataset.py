@@ -22,6 +22,7 @@ MAX_LINES = 40    # cap printed lines per section
 
 
 def md5sum(path: Path) -> str:
+    """fingerprints a file so that duplicates can be found."""
     h = hashlib.md5()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
@@ -30,6 +31,7 @@ def md5sum(path: Path) -> str:
 
 
 def collect_samples(cfg: dict):
+    """For each image, checks filename, folder matches the class, collector code is known, image opens, image size, and whether it GPS data. """
     """Scan raw_dir. Returns (samples, errors, warnings)."""
     raw_dir = Path(cfg["raw_dir"])
     classes = set(cfg["classes"])
@@ -119,6 +121,7 @@ def collect_samples(cfg: dict):
     return samples, errors, warnings
 
 
+# Print the table, error and warning lists
 def print_summary(samples, cfg):
     per_class = defaultdict(lambda: defaultdict(int))
     collectors = defaultdict(set)
@@ -149,6 +152,7 @@ def print_section(title, lines):
         print(f"  ... and {len(lines) - MAX_LINES} more")
 
 
+# Run everything, and exit with a failure code if any errors are found
 def main():
     parser = argparse.ArgumentParser(description="Check the raw dataset against the naming convention.")
     parser.add_argument("--config", default="configuration.yaml")
