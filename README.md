@@ -9,8 +9,9 @@ the predicted class with a confidence score.
 ## Team
 | Name | Student ID | Role |
 |------|-----------|------|
-|      |           |      |
-
+|  Nigel Gambiza|M00951628|      |
+|  Kay Bugingo  |M00971312|
+|  Janet Miti   |M00956868|
 ## 1. Installation
 ```bash
 git clone <repo-url>

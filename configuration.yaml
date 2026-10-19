@@ -15,7 +15,7 @@ classes:
 - keyboard
 - mouse
 - phone 
-- pen
+- stapler
 - background
 
 
@@ -32,7 +32,7 @@ min_side_px: 224
 
 # Date split to be done by physical object (or scene), not the image itself
 split:
-    train:0.6
+    train: 0.6
     val: 0.2
     test: 0.2
 seed: 42
