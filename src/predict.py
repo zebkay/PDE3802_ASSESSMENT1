@@ -1,15 +1,17 @@
-"""Classify office items from an image, a folder of images, or a live camera.
 
-Usage:
-    python -m src.predict --image path/to/img.jpg
-    python -m src.predict --folder path/to/dir
-    python -m src.predict --camera 0
-
-SKELETON: fill in each TODO yourself (GenAI rule: the final code must be ours).
-"""
 import argparse
+import csv
+import sys
+import time
+import csv
+import sys
+import time
 from pathlib import Path
 
+import cv2
+import numpy as np
+import torch
+import torch.nn as nn
 import yaml
 
 CONFIG_PATH = Path("configuration.yaml")
