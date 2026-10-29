@@ -6,3 +6,5 @@ seaborn
 Pillow
 PyYAML
 pytest
+torch
+torchvision
