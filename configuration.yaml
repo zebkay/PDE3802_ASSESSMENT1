@@ -1,38 +1,38 @@
-# This is the shared configuration for the dataset scripts.
+# Shared configuration for the dataset scripts.
 
 raw_dir: data/raw
 manifest_path: data/manifest.csv
 summary_path: data/split_summary.csv
 
-# Match folder names under data/raw/ and the <class> part of filenames.
-#'background' images show empty scenes; their <objectID> identifies the scene
-
+# Must match folder names under data/raw/ and the <class> part of filenames.
+# 'background' images show empty scenes; their <objectID> identifies the scene.
 classes:
-- mug
-- bottle
-- book
-- notebook
-- keyboard
-- mouse
-- phone 
-- stapler
-- background
+  - mug
+  - bottle
+  - book
+  - notebook
+  - keyboard
+  - mouse
+  - phone
+  - stapler
+  - background
 
-
-# Using our initials as collector codes
+# Collector codes: our initials, plus the online sources.
 collectors:
-    jm: "Janet Miti"
-    kb: "Kay Bugingo"
-    ng: "Nigel Gambiza"
+  jm: "Janet Miti"
+  kb: "Kay Bugingo"
+  ng: "Nigel Gambiza"
+  oi: "Open Images V7 (online)"
+  rf: "Roboflow Universe (online)"
 
-# Quality targets (violations are marked as warnings, not errors)
+# Quality targets (violations are warnings, not errors)
 min_objects_per_class: 5
 min_images_per_object: 20
 min_side_px: 224
 
-# Date split to be done by physical object (or scene), not the image itself
+# Split is done by physical object (or scene), not by image
 split:
-    train: 0.6
-    val: 0.2
-    test: 0.2
+  train: 0.6
+  val: 0.2
+  test: 0.2
 seed: 42
