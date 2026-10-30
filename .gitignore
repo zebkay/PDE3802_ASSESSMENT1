@@ -19,6 +19,7 @@ data/processed/
 data/train/
 data/val/
 data/test/
+data/review/
 
 # Trained weights: track only the final submitted model (use git add -f)
 models/*
