@@ -24,6 +24,7 @@ collectors:
   ng: "Nigel Gambiza"
   oi: "Open Images V7 (online)"
   rf: "Roboflow Universe (online)"
+  pl: "Places365 (online)"
 
 # Quality targets (violations are warnings, not errors)
 min_objects_per_class: 5
@@ -36,3 +37,8 @@ split:
   val: 0.2
   test: 0.2
 seed: 42
+
+online_collectors: [oi, rf, pl]
+val_batches: [5]
+test_collectors: []
+train_collectors: [] # For optional extra photos taken under a separate code.
