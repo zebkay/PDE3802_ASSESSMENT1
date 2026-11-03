@@ -208,7 +208,7 @@ def export_tflite(model, base_path, sample):
 #MAIN
 def main():
     parser = argparse.ArgumentParser(description="MobileNetV3 transfer learning (Keras)")
-    parser.add_argument("--config", default="config.yaml")
+    parser.add_argument("--config", default="configuration.yaml")
     parser.add_argument("--manifest", default=None)
     parser.add_argument("--variant", choices=["small", "large"], default="small")
     parser.add_argument("--weights", choices=["imagenet", "none"], default="imagenet",
