@@ -135,7 +135,7 @@ def time_inference(model, rows, size, use_color, n=50):
 #MAIN
 def main():
     parser = argparse.ArgumentParser(description="HOG + SVM baseline")
-    parser.add_argument("--config", default="config.yaml")
+    parser.add_argument("--config", default="configuration.yaml")
     parser.add_argument("--manifest", default=None, help="defaults to manifest_path in config")
     parser.add_argument("--img-size", type=int, default=128, help="multiple of 16, at least 32")
     parser.add_argument("--color-hist", action="store_true", help="append an HSV colour histogram")
