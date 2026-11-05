@@ -1,0 +1,99 @@
+{
+  "model": "hog_svm_color",
+  "split": "val",
+  "n_images": 253,
+  "accuracy": 0.6758893280632411,
+  "macro_f1": 0.6676445077777977,
+  "weighted_f1": 0.6752571112772212,
+  "per_class": {
+    "mug": {
+      "precision": 0.8064516129032258,
+      "recall": 0.8928571428571429,
+      "f1": 0.847457627118644,
+      "support": 28
+    },
+    "bottle": {
+      "precision": 0.65,
+      "recall": 0.5909090909090909,
+      "f1": 0.6190476190476191,
+      "support": 22
+    },
+    "book": {
+      "precision": 0.3225806451612903,
+      "recall": 0.35714285714285715,
+      "f1": 0.3389830508474576,
+      "support": 28
+    },
+    "notebook": {
+      "precision": 0.7777777777777778,
+      "recall": 0.5384615384615384,
+      "f1": 0.6363636363636364,
+      "support": 26
+    },
+    "keyboard": {
+      "precision": 0.5925925925925926,
+      "recall": 0.7272727272727273,
+      "f1": 0.6530612244897959,
+      "support": 22
+    },
+    "mouse": {
+      "precision": 0.8571428571428571,
+      "recall": 0.75,
+      "f1": 0.8,
+      "support": 32
+    },
+    "phone": {
+      "precision": 0.6538461538461539,
+      "recall": 0.5483870967741935,
+      "f1": 0.5964912280701754,
+      "support": 31
+    },
+    "stapler": {
+      "precision": 0.6666666666666666,
+      "recall": 0.8,
+      "f1": 0.7272727272727273,
+      "support": 25
+    },
+    "background": {
+      "precision": 0.7619047619047619,
+      "recall": 0.8205128205128205,
+      "f1": 0.7901234567901234,
+      "support": 39
+    }
+  },
+  "low_support_classes": [],
+  "classes_missing_from_split": [],
+  "top_confusions": [
+    {
+      "true": "book",
+      "predicted": "background",
+      "count": 6
+    },
+    {
+      "true": "keyboard",
+      "predicted": "book",
+      "count": 5
+    },
+    {
+      "true": "notebook",
+      "predicted": "book",
+      "count": 5
+    },
+    {
+      "true": "phone",
+      "predicted": "keyboard",
+      "count": 4
+    },
+    {
+      "true": "bottle",
+      "predicted": "book",
+      "count": 4
+    }
+  ],
+  "mean_confidence_correct": 0.6533208416042527,
+  "mean_confidence_incorrect": 0.3824208170554066,
+  "extra": {
+    "n_features": 1892,
+    "inference_ms": 1.61
+  }
+}

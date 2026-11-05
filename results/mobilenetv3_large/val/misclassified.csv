@@ -1,0 +1,7 @@
+path,true_class,predicted_class,confidence
+data/raw/stapler/stapler_rf04_0016.jpg,stapler,mouse,0.9899
+data/raw/notebook/notebook_rf04_0011.jpg,notebook,book,0.8113
+data/raw/notebook/notebook_rf04_0012.jpg,notebook,book,0.7477
+data/raw/phone/phone_oi04_0025.jpg,phone,stapler,0.6687
+data/raw/notebook/notebook_rf04_0002.jpg,notebook,phone,0.5748
+data/raw/keyboard/keyboard_oi04_0021.jpg,keyboard,book,0.5089

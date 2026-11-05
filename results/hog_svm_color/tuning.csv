@@ -1,0 +1,7 @@
+params,val_macro_f1
+"{'kernel': 'linear', 'C': 0.1}",0.6078
+"{'kernel': 'linear', 'C': 1}",0.6078
+"{'kernel': 'linear', 'C': 10}",0.6078
+"{'kernel': 'rbf', 'C': 1, 'gamma': 'scale'}",0.6561
+"{'kernel': 'rbf', 'C': 10, 'gamma': 'scale'}",0.6676
+"{'kernel': 'rbf', 'C': 100, 'gamma': 'scale'}",0.6676
