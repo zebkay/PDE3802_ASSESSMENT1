@@ -236,11 +236,13 @@ def main():
     model_name = f"mobilenetv3_{args.variant}{args.tag}"
 
     rows = read_manifest(args.manifest or cfg["manifest_path"])
-    by_split = {s: [r for r in rows if r["split"] == s] for s in ("train", "val", "test")}
+    by_split = {s: [r for r in rows if r["split"] == s] for s in ("train", "val", "test", "test_own")}
     for s, r in by_split.items():
         print(f"{s}: {len(r)} images")
     if not by_split["train"] or not by_split["val"]:
         raise SystemExit("Need non-empty train and val splits. Run python -m src.make_manifest first.")
+    if args.final and not (by_split["test"] and by_split["test_own"]):
+        raise SystemExit("--final needs both the test and test_own splits.")
 
     print("\nLoading images...")
     X_train, y_train, _ = load_images(by_split["train"], class_to_idx, args.img_size)
@@ -274,20 +276,21 @@ def main():
                                        model_name, split="val", paths=val_paths,
                                        confidences=conf, extra=extra))
 
+    # Saved on every run so predict.py can be tried before the final run.
+    Path("models").mkdir(exist_ok=True)
+    model.save(f"models/{model_name}.keras")
+    print(f"\nSaved models/{model_name}.keras (gitignored; use 'git add -f' for the submitted model)")
+
     if args.final:
-        if not by_split["test"]:
-            raise SystemExit("--final needs a non-empty test split.")
-        X_test, y_test, test_paths = load_images(by_split["test"], class_to_idx, args.img_size)
-        idx, conf = predict_split(model, X_test, args.batch_size)
-        print("\n=== FINAL: test split (report these numbers) ===")
-        print_summary(evaluate_predictions(names[y_test], names[idx], classes, args.results_dir,
-                                           model_name, split="test", paths=test_paths,
-                                           confidences=conf, extra=extra))
-        Path("models").mkdir(exist_ok=True)
-        model.save(f"models/{model_name}.keras")
-        print(f"\nSaved models/{model_name}.keras (gitignored; use 'git add -f' for the submitted model)")
+        for split in ("test", "test_own"):
+            X_test, y_test, test_paths = load_images(by_split[split], class_to_idx, args.img_size)
+            idx, conf = predict_split(model, X_test, args.batch_size)
+            print(f"\n=== FINAL: {split} split (report these numbers) ===")
+            print_summary(evaluate_predictions(names[y_test], names[idx], classes, args.results_dir,
+                                               model_name, split=split, paths=test_paths,
+                                               confidences=conf, extra=extra))
         if args.export_tflite:
-            export_tflite(model, f"models/{model_name}", X_test[0])
+            export_tflite(model, f"models/{model_name}", X_val[0])
     else:
         print("\nTest split not touched. Re-run with --final when you are done experimenting.")
 
