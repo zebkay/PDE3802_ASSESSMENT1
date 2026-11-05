@@ -141,8 +141,10 @@ def main():
     parser.add_argument("--color-hist", action="store_true", help="append an HSV colour histogram")
     parser.add_argument("--final", action="store_true", help="also score the test split and save the model")
     parser.add_argument("--results-dir", default="results")
+    parser.add_argument("--tag", default="", help="suffix for the results folder, e.g. '_color'")
     args = parser.parse_args()
-
+    model_name = MODEL_NAME + args.tag
+    
     if args.img_size < 32 or args.img_size % 16:
         parser.error("--img-size must be a multiple of 16 and at least 32")
 
@@ -150,11 +152,13 @@ def main():
     classes = cfg["classes"]
     seed = cfg["seed"]
     rows = read_manifest(args.manifest or cfg["manifest_path"])
-    by_split = {s: [r for r in rows if r["split"] == s] for s in ("train", "val", "test")}
+    by_split = {s: [r for r in rows if r["split"] == s] for s in ("train", "val", "test", "test_own")}
     for s, r in by_split.items():
         print(f"{s}: {len(r)} images")
     if not by_split["train"] or not by_split["val"]:
         raise SystemExit("Need non-empty train and val splits. Run python -m src.make_manifest first.")
+    if args.final and not (by_split["test"] and by_split["test_own"]):
+        raise SystemExit("--final needs both the test and test_own splits.")
 
     print("\nExtracting features...")
     X_train, y_train, _ = load_features(by_split["train"], args.img_size, args.color_hist)
@@ -168,7 +172,7 @@ def main():
     best_params, tuning = tune(X_train, y_train, X_val, y_val, seed)
     print(f"Best: {best_params}")
 
-    out_dir = Path(args.results_dir) / MODEL_NAME
+    out_dir = Path(args.results_dir) / model_name
     out_dir.mkdir(parents=True, exist_ok=True)
     with open(out_dir / "tuning.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -186,23 +190,23 @@ def main():
 
     pred, conf = predict_with_confidence(model, X_val)
     print()
-    print_summary(evaluate_predictions(y_val, pred, classes, args.results_dir, MODEL_NAME,
+    print_summary(evaluate_predictions(y_val, pred, classes, args.results_dir, model_name,
                                        split="val", paths=val_paths, confidences=conf, extra=extra))
 
     if args.final:
-        if not by_split["test"]:
-            raise SystemExit("--final needs a non-empty test split.")
-        X_test, y_test, test_paths = load_features(by_split["test"], args.img_size, args.color_hist)
-        pred, conf = predict_with_confidence(model, X_test)
-        print("\n=== FINAL: test split (report these numbers) ===")
-        print_summary(evaluate_predictions(y_test, pred, classes, args.results_dir, MODEL_NAME,
-                                           split="test", paths=test_paths, confidences=conf, extra=extra))
+        for split in ("test", "test_own"):
+            X_test, y_test, test_paths = load_features(by_split[split], args.img_size, args.color_hist)
+            pred, conf = predict_with_confidence(model, X_test)
+            print(f"\n=== FINAL: {split} split (report these numbers) ===")
+            print_summary(evaluate_predictions(y_test, pred, classes, args.results_dir, model_name,
+                                               split=split, paths=test_paths, confidences=conf,
+                                               extra=extra))
         Path("models").mkdir(exist_ok=True)
         joblib.dump({"model": model, "classes": classes, "img_size": args.img_size,
-                     "use_color": args.color_hist}, f"models/{MODEL_NAME}.joblib")
-        print(f"\nSaved models/{MODEL_NAME}.joblib (gitignored; use 'git add -f' for the final submitted model)")
+                     "use_color": args.color_hist}, f"models/{model_name}.joblib")
+        print(f"\nSaved models/{model_name}.joblib (gitignored; use 'git add -f' for the final submitted model)")
     else:
-        print("\nTest split not touched. Re-run with --final when you are done experimenting.")
+        print("\nTest split not touched. Re-run with --final when you done experimenting.")
 
 
 if __name__ == "__main__":
