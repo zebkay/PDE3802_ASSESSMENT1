@@ -1,7 +1,7 @@
-"""Build data/manifest.csv with a leakage-safe train/val/test split.
+"""Build data/manifest.csv with a leakage-safe split.
 
-The split is done per physical object (per scene for 'background'), arranged by
-class, so no object appears in more than one split.
+Splits: train, val and test come from online batches; test_own is our own photos.
+Each object (or scene for 'background') lands in one split only.
 
 Run from the repo root:
     python -m src.make_manifest
@@ -18,7 +18,7 @@ from pathlib import Path
 from .check_dataset import collect_samples, print_section
 from .data_utils import load_config
 
-SPLITS = ("train", "val", "test")
+SPLITS = ("train", "val", "test", "test_own")
 
 
 def assign_splits(object_keys, fractions, rng):
@@ -36,9 +36,60 @@ def assign_splits(object_keys, fractions, rng):
         out[key] = "train" if i < n_train else "val" if i < n_train + n_val else "test"
     return out
 
+def assign_by_source(samples, cfg):
+    """Decide each object's split from WHO collected it (not by random shuffling).
+
+    online_collectors (oi, rf, pl): split by BATCH. val_batches -> val, test_batches -> test,
+    the rest -> train.
+    test_collectors  (your own photos): everything -> test_own.
+    train_collectors (optional extra own photos): everything -> train.
+    Returns (assignment {object_key: split}, errors, notes).
+    """
+    online = set(cfg.get("online_collectors") or [])
+    test_c = set(cfg.get("test_collectors") or [])
+    train_c = set(cfg.get("train_collectors") or [])
+    val_batches = set(cfg.get("val_batches") or [])
+    test_batches = set(cfg.get("test_batches") or [])
+
+    errors, notes = [], []
+    for code in sorted((online & test_c) | (online & train_c) | (test_c & train_c)):
+        errors.append(f"collector code '{code}' is listed in more than one of "
+                      "online_collectors / test_collectors / train_collectors")
+    for batch in sorted(val_batches & test_batches):
+        errors.append(f"online batch {batch} is listed in both val_batches and test_batches")
+
+    assignment, unknown = {}, set()
+    for s in samples:
+        if s.object_key in assignment:
+            continue
+        if s.collector in test_c:
+            assignment[s.object_key] = "test_own"
+        elif s.collector in train_c:
+            assignment[s.object_key] = "train"
+        elif s.collector in online:
+            batch = int(s.object_id[len(s.collector):])
+            if batch in val_batches:
+                assignment[s.object_key] = "val"
+            elif batch in test_batches:
+                assignment[s.object_key] = "test"
+            else:
+                assignment[s.object_key] = "train"
+        else:
+            unknown.add(s.collector)
+    for code in sorted(unknown):
+        errors.append(f"collector '{code}' has images but is not in online_collectors, "
+                      "test_collectors or train_collectors in config.yaml")
+
+    if "test" not in assignment.values():
+        notes.append("No online test images (check test_batches). --final will refuse until they exist.")
+    if "test_own" not in assignment.values():
+        notes.append("No own-photo test images yet (test_collectors is empty, or those collectors "
+                     "have no files). --final will refuse until they exist.")
+    notes.append(f"Online batches {sorted(val_batches)} -> val; {sorted(test_batches)} -> test; "
+                 "other online batches -> train.")
+    return assignment, errors, notes
 
 def main():
-    """Runs the checker first and refuses to continue if errors. Then splits each class, double-checks that no objects landed in two splits, writes data/manifest.csv (one row per image with its split) and data/split_summary.csv (counts)"""
     parser = argparse.ArgumentParser(description="Create the dataset manifest and split.")
     parser.add_argument("--config", default="configuration.yaml")
     parser.add_argument("--force", action="store_true", help="ignore checker errors")
@@ -56,21 +107,11 @@ def main():
     if not samples:
         sys.exit("No valid images found.")
 
-    by_class = defaultdict(set)
-    for s in samples:
-        by_class[s.cls].add(s.object_key)
-
-    assignment = {}
-    for cls in cfg["classes"]:
-        objs = by_class.get(cls)
-        if not objs:
-            print(f"Note: class '{cls}' has no images, skipped.")
-            continue
-        rng = random.Random(f"{cfg['seed']}-{cls}")  # per-class seed: adding a class won't reshuffle others
-        try:
-            assignment.update(assign_splits(objs, fractions, rng))
-        except ValueError as exc:
-            sys.exit(f"class '{cls}': {exc}. Collect more distinct objects.")
+    assignment, split_errors, notes = assign_by_source(samples, cfg)
+    if split_errors:
+        sys.exit("\n".join(split_errors))
+    for note in notes:
+        print("Note:", note)
 
     rows = []
     for s in sorted(samples, key=lambda s: str(s.path)):
@@ -113,8 +154,8 @@ def main():
                 writer.writerow([cls, sp, len(objs), imgs])
 
     print(f"Wrote {manifest_path} ({len(rows)} images) and {summary_path}\n")
-    print(f"{'class':<12}" + "".join(f"{sp:>14}" for sp in SPLITS))
-    print("-" * 54)
+    print(f"{'class':<12}" + "".join(f"{sp:>16}" for sp in SPLITS))
+    print("-" * 76)
     for cls in cfg["classes"]:
         if cls not in counts:
             continue
@@ -122,7 +163,7 @@ def main():
         for sp in SPLITS:
             imgs, objs = counts[cls][sp]
             cells.append(f"{imgs} ({len(objs)} obj)")
-        print(f"{cls:<12}" + "".join(f"{c:>14}" for c in cells))
+        print(f"{cls:<12}" + "".join(f"{c:>16}" for c in cells))
     print("\nFormat: images (distinct objects/scenes).")
 
 
