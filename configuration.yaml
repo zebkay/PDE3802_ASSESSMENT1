@@ -25,6 +25,7 @@ collectors:
   oi: "Open Images V7 (online)"
   rf: "Roboflow Universe (online)"
   pl: "Places365 (online)"
+  tu: "Training top-up (own photos)"
 
 # Quality targets (violations are warnings, not errors)
 min_objects_per_class: 5
@@ -39,6 +40,7 @@ split:
 seed: 42
 
 online_collectors: [oi, rf, pl]
-val_batches: [5]
-test_collectors: []
-train_collectors: [] # For optional extra photos taken under a separate code.
+val_batches: [4]        # online batch used for tuning
+test_batches: [5]       # online batch scored once with --final (split name: test)
+test_collectors: [jm, kb, ng] # own photos, scored once with --final (split name: test_own)
+train_collectors: [tu] # For optional extra photos taken under a separate code.
