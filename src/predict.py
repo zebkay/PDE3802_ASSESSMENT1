@@ -1,8 +1,16 @@
+"""Classify one office item from an image, a folder of images, or a live camera.
+
+Run from the repo root:
+    python -m src.predict --image path/to/photo.jpg
+    python -m src.predict --folder path/to/folder
+    python -m src.predict --camera 0
+Add --weights models/<name>.keras to choose a model.
+
+Camera mode classifies only the area inside the green box, because the model was
+trained on tight crops of single objects. Press 's' to save a snapshot, 'q' to quit.
+"""
 
 import argparse
-import csv
-import sys
-import time
 import csv
 import sys
 import time
@@ -10,58 +18,45 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import torch
-import torch.nn as nn
 import yaml
-from torchvision.models import MobileNet_V3_Small_Weights, mobilenet_v3_small
 
 CONFIG_PATH = Path("configuration.yaml")
 IMAGE_EXTS = {".jpg", ".jpeg", ".png"}
-IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
-IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
+GUIDE_BOX_FRACTION = 0.6  # guide box side, as a fraction of the frame's shorter side
+SNAPSHOT_DIR = Path("results/snapshots")
 
 
 def load_config(path=CONFIG_PATH):
-     with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def load_model(weights_path, class_names):
-     
     weights_path = Path(weights_path)
-    if weights_path.exists():
-        model = mobilenet_v3_small(weights=None)
-        in_features = model.classifier[3].in_features
-        model.classifier[3] = nn.Linear(in_features, len(class_names))
-        state = torch.load(weights_path, map_location="cpu")
-        model.load_state_dict(state)
-        labels = class_names
-    else:
-        print(f"[warning] {weights_path} not found - using ImageNet weights "
-              "(labels will be ImageNet classes, not ours)")
-        weights = MobileNet_V3_Small_Weights.IMAGENET1K_V1
-        model = mobilenet_v3_small(weights=weights)
-        labels = weights.meta["categories"]
-    model.eval()
-    return model, labels
+    if not weights_path.exists():
+        sys.exit(f"Error: model '{weights_path}' not found. Train one with "
+                 "'python -m src.train_cnn --variant small', or choose one with --weights.")
+    from tensorflow import keras  # imported here so the error above appears quickly
+
+    model = keras.models.load_model(weights_path, compile=False)
+    if model.output_shape[-1] != len(class_names):
+        sys.exit(f"Error: model has {model.output_shape[-1]} outputs but "
+                 f"configuration.yaml lists {len(class_names)} classes.")
+    return model, class_names
 
 
 def preprocess(bgr_image, size=224):
-    
-    rgb = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
-    rgb = cv2.resize(rgb, (size, size), interpolation=cv2.INTER_AREA)
-    x = rgb.astype(np.float32) / 255.0
-    x = (x - IMAGENET_MEAN) / IMAGENET_STD
-    x = np.transpose(x, (2, 0, 1))          # HWC -> CHW
-    return torch.from_numpy(x).unsqueeze(0)  # add batch dim
+    """Match training: RGB, 0-255, 224x224. The model scales its own input, so no /255."""
+    resized = cv2.resize(bgr_image, (size, size), interpolation=cv2.INTER_AREA)
+    rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+    return rgb.astype(np.float32)[None]  # add batch dim
 
 
 def predict(model, tensor, labels, threshold=0.5):
-    with torch.no_grad():
-        probs = torch.softmax(model(tensor), dim=1)[0]
-    conf, idx = torch.max(probs, dim=0)
-    conf = float(conf)
-    label = labels[int(idx)]
+    probs = model(tensor, training=False).numpy()[0]
+    idx = int(np.argmax(probs))
+    conf = float(probs[idx])
+    label = labels[idx]
     if conf < threshold:
         label = "uncertain"
     elif label == "background":
@@ -103,12 +98,20 @@ def run_folder(folder, model, labels, threshold, out_csv=Path("results/predictio
     print(f"Saved {len(rows)} predictions to {out_csv}")
 
 
+def guide_box(frame, fraction=GUIDE_BOX_FRACTION):
+    """Return (x1, y1, x2, y2) of a centred square."""
+    h, w = frame.shape[:2]
+    side = int(min(h, w) * fraction)
+    x1, y1 = (w - side) // 2, (h - side) // 2
+    return x1, y1, x1 + side, y1 + side
+
+
 def run_camera(index, model, labels, threshold):
     cap = cv2.VideoCapture(index)
     if not cap.isOpened():
         sys.exit(f"Error: camera {index} did not open - try --camera 1 "
                  "or check camera permissions")
-    print("Press 'q' to quit")
+    print("Place the item inside the box. Press 's' to save a snapshot, 'q' to quit")
     prev = time.time()
     try:
         while True:
@@ -116,20 +119,28 @@ def run_camera(index, model, labels, threshold):
             if not ok:
                 print("Error: could not read a frame from the camera")
                 break
-            label, conf = predict(model, preprocess(frame), labels, threshold)
+            x1, y1, x2, y2 = guide_box(frame)
+            label, conf = predict(model, preprocess(frame[y1:y2, x1:x2]), labels, threshold)
 
             now = time.time()
             fps = 1.0 / max(now - prev, 1e-6)
             prev = now
 
             colour = (0, 0, 255) if label == "uncertain" else (0, 200, 0)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), colour, 2)
             cv2.putText(frame, f"{label} ({conf:.2f})", (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.9, colour, 2)
             cv2.putText(frame, f"FPS: {fps:.1f}", (10, 60),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             cv2.imshow("Office Item Classifier", frame)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord("q"):
                 break
+            if key == ord("s"):
+                SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+                out = SNAPSHOT_DIR / f"{int(now)}_{label.replace(' ', '_')}.jpg"
+                cv2.imwrite(str(out), frame)
+                print(f"Saved {out}")
     finally:
         cap.release()
         cv2.destroyAllWindows()
@@ -141,7 +152,7 @@ def parse_args(argv=None):
     source.add_argument("--image", type=Path, help="path to one image")
     source.add_argument("--folder", type=Path, help="folder of images")
     source.add_argument("--camera", type=int, help="camera index, e.g. 0")
-    parser.add_argument("--weights", type=Path, default=Path("models/best.pt"))
+    parser.add_argument("--weights", type=Path, default=Path("models/mobilenetv3_large_topup.keras"))
     parser.add_argument("--threshold", type=float, default=0.5,
                         help="below this confidence, output 'uncertain'")
     return parser.parse_args(argv)
