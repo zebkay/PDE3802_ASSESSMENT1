@@ -171,7 +171,7 @@ configuration.yaml  classes, collector codes and split rules
 src/        dataset checks, training, evaluation and prediction code
 scripts/    one-off helpers for downloading and preparing data
 data/       manifest, dataset card and sources (images downloaded separately)
-models/     final trained model
+models/     final trained model (download from the v1.0 release)
 results/    metrics, confusion matrices and training curves
 tests/      unit tests
 ```
