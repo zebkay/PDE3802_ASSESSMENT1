@@ -23,13 +23,13 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
-Tested on: Windows, Python 3.9.10, TensorFlow TODO-version.
+Tested on: Windows, Python 3.9.10, TensorFlow 2.20.0.
 
 ## 2. Getting the data
 The images are not stored in Git. Download the dataset zip and unzip it so the images sit in
 `data/raw/<class>/`:
 
-TODO-dataset-link
+[Download the dataset zip] https://drive.google.com/file/d/1TTf1B8ElVriw0s7XwRwe550GBPSFMN0k/view?usp=sharing
 
 See the dataset card ([`data/dataset_card.md`](data/dataset_card.md)) for counts, sources and
 licences. The split for every image is listed in `data/manifest.csv`.
@@ -130,15 +130,17 @@ different cameras, backgrounds and viewpoints.
 - Notebook: 10 of 27 were wrong (8 as phone, 2 as book).
 - Phone and mug are over-predicted: 15 wrong predictions were phone and 12 were mug.
 
-TODO-bottle-findings: say what the 11 bottle-to-mug photos have in common.
+**Viewpoint.** We inspected the bottle photos by eye. All 9 correctly classified bottles
+were straight side-on views, including 3 lying flat. At least 4 of the 11 bottle-to-mug
+errors were top-down photos, and all 4 bottle-to-stapler errors were taken at about 45
+degrees. The model appears to depend on the bottle's side profile, and bottle received no
+top-up photos from other angles. We did not retrain to confirm this.
 
 **Possible causes (not proven):**
 - Mug, phone, book and notebook received training top-up photos, but bottle did not. 32 of the
   42 wrong predictions went to mug, phone or book, so the model may partly link phone-style
   photos to those classes. Top-up images were not removed and re-tested, so this is untested.
 - Notebooks seen from above and phones can both look like flat dark rectangles.
-- Each own-photo class came from one collector(kb), so class and photographer effects cannot be
-  separated.
 
 **Confidence.** 34 of the 42 mistakes had confidence of 0.5 or more, and 12 had 0.9 or more. The
 0.5 threshold therefore catches few mistakes, so a robot should not rely on it alone.
