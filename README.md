@@ -24,8 +24,8 @@ zebkay: Kay
 
 ## 1. Installation
 ```bash
-git clone https://github.com/zebkay/PDE3802_ASSESSMENT1
-cd PDE3802
+git clone https://github.com/zebkay/PDE3802_ASSESSMENT1.git
+cd PDE3802_ASSESSMENT1
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
