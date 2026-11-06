@@ -15,6 +15,11 @@ model is the baseline.
 | Kay Bugingo | M00971312 | dataset and model training |
 | Janet Miti | M00956868 | image preprocessing and testing |
 
+## Usernames.
+ng621: Nigel
+jmiti: Janet
+zebkay: Kay
+
 ## 1. Installation
 ```bash
 git clone <repo-url>
