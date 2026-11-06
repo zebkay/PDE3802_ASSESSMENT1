@@ -33,10 +33,10 @@ physical objects.
 ## Collection
 - **Online crops:** cut from labelled bounding boxes with 10% padding, using
   `scripts/prepare_online_data.py`. Crops longer than 640 px were reduced.
-- **Background:** wide office-type scenes from the Places365 validation set, selected by hand
+- **Background:** wide office-type scenes from the Places365 validation set, selected by eye
   to exclude target objects, people and poor-quality images.
-- **Devices used:** TODO-devices
-- **Locations / backgrounds / lighting:** TODO-locations
+- **Devices used:** Iphone 15, Iphone 12
+- **Locations / backgrounds / lighting:** Homespaces / balcony, desk, floor, bed, wall, closet door / dim, light (lamp), outdoor 
 - **Image resolution and format:** own photos are JPG, with the longest side at most 1280 px.
   Places365 images are 256x256. Online crops vary, and many are under 224 px on the shortest
   side. All images are resized to 224x224 for the CNN.
@@ -62,13 +62,13 @@ How leakage was avoided:
 - Online batches are assigned by hashing the photographer (Open Images), filename prefix
   (Roboflow) or filename (Places365), so one source stays in one batch.
 - No object ID appears in more than one split, and the manifest script checks this.
-- Top-up photos use physical objects different from those in `test_own`. TODO-confirm-objects
+- Top-up photos use physical objects different from those in `test_own`.
 - Own test photos are never used for training.
 
 ## Labelling
 - Online labels come from the source datasets' bounding-box annotations. Open Images boxes
   marked as groups, depictions or inside views were dropped, as were boxes under 100 px.
-- Crops were reviewed by hand on contact sheets.
+- Crops were reviewed by eye on contact sheets.
 - Own photos were labelled by class when taken, and the label is stored in the filename and
   folder.
 - `src/check_dataset.py` checks filenames, class folders, readable images, GPS data and exact
@@ -76,7 +76,6 @@ How leakage was avoided:
 
 ## Ethics and privacy
 - Own photos contain no faces or personal information. Some top-up photos show a hand.
-  TODO-confirm-no-faces
 - `scripts/rename_photos.py` removes metadata, including GPS location, from own photos.
 - Wide background images with people were excluded during selection.
 - Online crops are tightly cropped objects, but were reviewed for label quality rather than
@@ -85,7 +84,6 @@ How leakage was avoided:
 ## Known limitations and biases
 - Online crops differ from robot-camera views, so scores on own photos are much lower.
 - Top-up photos cover only 4 of the 9 classes, which may bias the model towards those classes.
-- Own-photo classes each came from one collector, so class and photographer are linked.
 - Keyboard (7 photos, 1 object) and stapler (12 photos, 1 object) are thin in `test_own`.
 - 132 of 181 stapler crops come from Roboflow image sequences of few objects, so stapler has
   less variety. Some Roboflow notebook images may show pens lying on notebooks.
