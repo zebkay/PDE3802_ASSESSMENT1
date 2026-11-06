@@ -38,6 +38,10 @@ licences. The split for every image is listed in `data/manifest.csv`.
 Run from the repo root. The final model is `models/mobilenetv3_large_topup.keras`, which is
 the default for `--weights`.
 
+**Getting the model:** the model is too large for the repo. Download
+[`mobilenetv3_large_topup.keras`](https://github.com/zebkay/PDE3802_ASSESSMENT1/releases/download/v1.0/mobilenetv3_large_topup.keras)
+from the v1.0 release and put it in a `models/` folder at the repo root.
+
 ```bash
 # One image
 python -m src.predict --image path/to/photo.jpg
