@@ -15,7 +15,7 @@ model is the baseline.
 | Kay Bugingo | M00971312 | dataset and model training |
 | Janet Miti | M00956868 | image preprocessing and testing |
 
-## Usernames.
+## Github Usernames.
 ng621: Nigel
 
 jmiti: Janet
@@ -24,8 +24,8 @@ zebkay: Kay
 
 ## 1. Installation
 ```bash
-git clone <repo-url>
-cd <repo-folder>
+git clone https://github.com/zebkay/PDE3802_ASSESSMENT1
+cd PDE3802
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -36,7 +36,7 @@ Tested on: Windows, Python 3.9.10, TensorFlow 2.20.0.
 The images are not stored in Git. Download the dataset zip and unzip it so the images sit in
 `data/raw/<class>/`:
 
-[`Download the dataset zip`] https://drive.google.com/file/d/1TTf1B8ElVriw0s7XwRwe550GBPSFMN0k/view?usp=sharing
+[Download the dataset zip](https://drive.google.com/file/d/1TTf1B8ElVriw0s7XwRwe550GBPSFMN0k/view?usp=sharing)
 
 See the dataset card ([`data/dataset_card.md`](data/dataset_card.md)) for counts, sources and
 licences. The split for every image is listed in `data/manifest.csv`.
@@ -46,8 +46,8 @@ Run from the repo root. The final model is `models/mobilenetv3_large_topup.keras
 the default for `--weights`.
 
 **Getting the model:** the model is too large for the repo. Download
-[`mobilenetv3_large_topup.keras`](https://github.com/zebkay/PDE3802_ASSESSMENT1/releases/download/v1.0/mobilenetv3_large_topup.keras)
-from the v1.0 release and put it in a `models/` folder at the repo root.
+[`mobilenetv3_large_topup.keras`](https://github.com/zebkay/PDE3802_ASSESSMENT1/releases/download/v1.2/mobilenetv3_large_topup.keras)
+from the v1.2 release and put it in a `models/` folder at the repo root.
 
 ```bash
 # One image
@@ -100,6 +100,9 @@ All three models used the same 984 training images.
 | HOG + SVM (no colour) | 0.656 / 0.646 | 0.662 / 0.669 | 0.217 / 0.149 | 1.64 | n/a |
 | MobileNetV3 Small | 0.901 / 0.897 | not scored | not scored | 97.36 | 944,313 |
 | **MobileNetV3 Large (final)** | **0.976 / 0.975** | **0.942 / 0.943** | **0.739 / 0.748** | **138.40** | **3,005,001** |
+
+`results/hog_svm_color`, `results/mobilenetv3_large` and `results/mobilenetv3_small` are
+earlier runs on an 840-image training set (before the top-up), kept for the record.
 
 - **Val (253 images):** online images, used to compare models and stop training.
 - **Online test (278 images):** a held-out online batch.
@@ -180,7 +183,7 @@ configuration.yaml  classes, collector codes and split rules
 src/        dataset checks, training, evaluation and prediction code
 scripts/    one-off helpers for downloading and preparing data
 data/       manifest, dataset card and sources (images downloaded separately)
-models/     final trained model (download from the v1.0 release)
+models/     final trained model (download from the v1.2 release)
 results/    metrics, confusion matrices and training curves
 tests/      unit tests
 ```
