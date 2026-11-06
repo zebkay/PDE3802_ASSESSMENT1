@@ -133,7 +133,7 @@ TODO-bottle-findings: say what the 11 bottle-to-mug photos have in common.
   42 wrong predictions went to mug, phone or book, so the model may partly link phone-style
   photos to those classes. Top-up images were not removed and re-tested, so this is untested.
 - Notebooks seen from above and phones can both look like flat dark rectangles.
-- Each own-photo class came from one collector, so class and photographer effects cannot be
+- Each own-photo class came from one collector(kb), so class and photographer effects cannot be
   separated.
 
 **Confidence.** 34 of the 42 mistakes had confidence of 0.5 or more, and 12 had 0.9 or more. The
