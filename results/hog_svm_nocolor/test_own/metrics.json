@@ -1,0 +1,101 @@
+{
+  "model": "hog_svm_nocolor",
+  "split": "test_own",
+  "n_images": 161,
+  "accuracy": 0.21739130434782608,
+  "macro_f1": 0.14931614531113904,
+  "weighted_f1": 0.18190864657643782,
+  "per_class": {
+    "mug": {
+      "precision": 0.35714285714285715,
+      "recall": 0.2,
+      "f1": 0.2564102564102564,
+      "support": 25
+    },
+    "bottle": {
+      "precision": 0.2727272727272727,
+      "recall": 0.5,
+      "f1": 0.35294117647058826,
+      "support": 24
+    },
+    "book": {
+      "precision": 0.10638297872340426,
+      "recall": 0.2631578947368421,
+      "f1": 0.15151515151515152,
+      "support": 19
+    },
+    "notebook": {
+      "precision": 0.3076923076923077,
+      "recall": 0.14814814814814814,
+      "f1": 0.2,
+      "support": 27
+    },
+    "keyboard": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 7
+    },
+    "mouse": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 16
+    },
+    "phone": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 15
+    },
+    "stapler": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 12
+    },
+    "background": {
+      "precision": 0.2903225806451613,
+      "recall": 0.5625,
+      "f1": 0.3829787234042553,
+      "support": 16
+    }
+  },
+  "low_support_classes": [
+    "keyboard"
+  ],
+  "classes_missing_from_split": [],
+  "top_confusions": [
+    {
+      "true": "notebook",
+      "predicted": "phone",
+      "count": 9
+    },
+    {
+      "true": "mug",
+      "predicted": "book",
+      "count": 9
+    },
+    {
+      "true": "mug",
+      "predicted": "bottle",
+      "count": 8
+    },
+    {
+      "true": "mouse",
+      "predicted": "book",
+      "count": 7
+    },
+    {
+      "true": "stapler",
+      "predicted": "bottle",
+      "count": 6
+    }
+  ],
+  "mean_confidence_correct": 0.4560665155614272,
+  "mean_confidence_incorrect": 0.45893886869336337,
+  "extra": {
+    "n_features": 1764,
+    "inference_ms": 1.64
+  }
+}

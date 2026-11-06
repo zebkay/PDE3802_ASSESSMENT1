@@ -3,13 +3,13 @@
   "split": "val",
   "n_images": 253,
   "accuracy": 0.9762845849802372,
-  "macro_f1": 0.9751936731693535,
-  "weighted_f1": 0.9758652680282207,
+  "macro_f1": 0.9754617031997985,
+  "weighted_f1": 0.9760954823299544,
   "per_class": {
     "mug": {
-      "precision": 0.9655172413793104,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1": 0.9824561403508771,
+      "f1": 1.0,
       "support": 28
     },
     "bottle": {
@@ -19,39 +19,39 @@
       "support": 22
     },
     "book": {
-      "precision": 0.9333333333333333,
-      "recall": 1.0,
-      "f1": 0.9655172413793104,
+      "precision": 0.9642857142857143,
+      "recall": 0.9642857142857143,
+      "f1": 0.9642857142857143,
       "support": 28
     },
     "notebook": {
-      "precision": 1.0,
+      "precision": 0.9583333333333334,
       "recall": 0.8846153846153846,
-      "f1": 0.9387755102040817,
+      "f1": 0.92,
       "support": 26
     },
     "keyboard": {
-      "precision": 1.0,
+      "precision": 0.9565217391304348,
       "recall": 1.0,
-      "f1": 1.0,
+      "f1": 0.9777777777777777,
       "support": 22
     },
     "mouse": {
-      "precision": 0.9411764705882353,
-      "recall": 1.0,
-      "f1": 0.9696969696969697,
+      "precision": 0.96875,
+      "recall": 0.96875,
+      "f1": 0.96875,
       "support": 32
     },
     "phone": {
-      "precision": 0.96875,
+      "precision": 0.9393939393939394,
       "recall": 1.0,
-      "f1": 0.9841269841269841,
+      "f1": 0.96875,
       "support": 31
     },
     "stapler": {
       "precision": 1.0,
-      "recall": 0.88,
-      "f1": 0.9361702127659575,
+      "recall": 0.96,
+      "f1": 0.9795918367346939,
       "support": 25
     },
     "background": {
@@ -67,28 +67,33 @@
     {
       "true": "stapler",
       "predicted": "mouse",
-      "count": 2
+      "count": 1
     },
     {
-      "true": "notebook",
-      "predicted": "book",
-      "count": 2
-    },
-    {
-      "true": "stapler",
-      "predicted": "mug",
+      "true": "mouse",
+      "predicted": "notebook",
       "count": 1
     },
     {
       "true": "notebook",
       "predicted": "phone",
       "count": 1
+    },
+    {
+      "true": "notebook",
+      "predicted": "keyboard",
+      "count": 1
+    },
+    {
+      "true": "notebook",
+      "predicted": "book",
+      "count": 1
     }
   ],
-  "mean_confidence_correct": 0.9758636524320131,
-  "mean_confidence_incorrect": 0.7798878153165182,
+  "mean_confidence_correct": 0.9749027058663156,
+  "mean_confidence_incorrect": 0.726214682062467,
   "extra": {
     "params": 3005001,
-    "inference_ms": 233.34
+    "inference_ms": 138.4
   }
 }

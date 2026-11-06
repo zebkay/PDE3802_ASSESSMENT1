@@ -1,0 +1,17 @@
+path,true_class,predicted_class,confidence
+data/raw/notebook/notebook_rf05_0011.jpg,notebook,stapler,0.9938
+data/raw/bottle/bottle_oi05_0033.jpg,bottle,mug,0.9731
+data/raw/book/book_oi05_0010.jpg,book,notebook,0.9281
+data/raw/bottle/bottle_oi05_0016.jpg,bottle,mug,0.8150
+data/raw/book/book_oi05_0020.jpg,book,notebook,0.7857
+data/raw/notebook/notebook_rf05_0022.jpg,notebook,book,0.7850
+data/raw/mouse/mouse_oi05_0005.jpg,mouse,phone,0.7453
+data/raw/keyboard/keyboard_oi05_0001.jpg,keyboard,phone,0.7221
+data/raw/mouse/mouse_oi05_0006.jpg,mouse,phone,0.6758
+data/raw/book/book_oi05_0015.jpg,book,stapler,0.6574
+data/raw/notebook/notebook_rf05_0010.jpg,notebook,phone,0.6078
+data/raw/book/book_oi05_0018.jpg,book,notebook,0.6064
+data/raw/mouse/mouse_oi05_0014.jpg,mouse,mug,0.5794
+data/raw/keyboard/keyboard_oi05_0009.jpg,keyboard,phone,0.5019
+data/raw/stapler/stapler_rf05_0012.jpg,stapler,notebook,0.4665
+data/raw/mouse/mouse_oi05_0021.jpg,mouse,phone,0.4322

@@ -1,0 +1,99 @@
+{
+  "model": "mobilenetv3_large_topup",
+  "split": "test",
+  "n_images": 278,
+  "accuracy": 0.9424460431654677,
+  "macro_f1": 0.9430273252169505,
+  "weighted_f1": 0.9428584347749086,
+  "per_class": {
+    "mug": {
+      "precision": 0.8928571428571429,
+      "recall": 1.0,
+      "f1": 0.9433962264150944,
+      "support": 25
+    },
+    "bottle": {
+      "precision": 1.0,
+      "recall": 0.9428571428571428,
+      "f1": 0.9705882352941176,
+      "support": 35
+    },
+    "book": {
+      "precision": 0.9655172413793104,
+      "recall": 0.875,
+      "f1": 0.9180327868852459,
+      "support": 32
+    },
+    "notebook": {
+      "precision": 0.8823529411764706,
+      "recall": 0.9090909090909091,
+      "f1": 0.8955223880597015,
+      "support": 33
+    },
+    "keyboard": {
+      "precision": 1.0,
+      "recall": 0.9487179487179487,
+      "f1": 0.9736842105263158,
+      "support": 39
+    },
+    "mouse": {
+      "precision": 1.0,
+      "recall": 0.8620689655172413,
+      "f1": 0.9259259259259259,
+      "support": 29
+    },
+    "phone": {
+      "precision": 0.8285714285714286,
+      "recall": 1.0,
+      "f1": 0.90625,
+      "support": 29
+    },
+    "stapler": {
+      "precision": 0.9393939393939394,
+      "recall": 0.96875,
+      "f1": 0.9538461538461539,
+      "support": 32
+    },
+    "background": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 24
+    }
+  },
+  "low_support_classes": [],
+  "classes_missing_from_split": [],
+  "top_confusions": [
+    {
+      "true": "mouse",
+      "predicted": "phone",
+      "count": 3
+    },
+    {
+      "true": "book",
+      "predicted": "notebook",
+      "count": 3
+    },
+    {
+      "true": "keyboard",
+      "predicted": "phone",
+      "count": 2
+    },
+    {
+      "true": "bottle",
+      "predicted": "mug",
+      "count": 2
+    },
+    {
+      "true": "stapler",
+      "predicted": "notebook",
+      "count": 1
+    }
+  ],
+  "mean_confidence_correct": 0.975078483233015,
+  "mean_confidence_incorrect": 0.7047225702553988,
+  "extra": {
+    "params": 3005001,
+    "inference_ms": 138.4
+  }
+}

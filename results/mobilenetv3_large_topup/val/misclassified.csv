@@ -1,7 +1,7 @@
 path,true_class,predicted_class,confidence
-data/raw/notebook/notebook_rf04_0012.jpg,notebook,book,0.9610
-data/raw/stapler/stapler_rf04_0016.jpg,stapler,mouse,0.9303
-data/raw/stapler/stapler_oi04_0007.jpg,stapler,mug,0.8569
-data/raw/notebook/notebook_rf04_0011.jpg,notebook,book,0.8325
-data/raw/stapler/stapler_rf04_0017.jpg,stapler,mouse,0.6041
-data/raw/notebook/notebook_rf04_0002.jpg,notebook,phone,0.4944
+data/raw/notebook/notebook_rf04_0012.jpg,notebook,book,0.9136
+data/raw/book/book_oi04_0009.jpg,book,phone,0.7971
+data/raw/mouse/mouse_oi04_0001.jpg,mouse,notebook,0.7479
+data/raw/stapler/stapler_rf04_0016.jpg,stapler,mouse,0.7332
+data/raw/notebook/notebook_rf04_0002.jpg,notebook,phone,0.6840
+data/raw/notebook/notebook_rf04_0011.jpg,notebook,keyboard,0.4815
