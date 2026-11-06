@@ -29,7 +29,7 @@ Tested on: Windows, Python 3.9.10, TensorFlow 2.20.0.
 The images are not stored in Git. Download the dataset zip and unzip it so the images sit in
 `data/raw/<class>/`:
 
-[Download the dataset zip] https://drive.google.com/file/d/1TTf1B8ElVriw0s7XwRwe550GBPSFMN0k/view?usp=sharing
+[`Download the dataset zip`] https://drive.google.com/file/d/1TTf1B8ElVriw0s7XwRwe550GBPSFMN0k/view?usp=sharing
 
 See the dataset card ([`data/dataset_card.md`](data/dataset_card.md)) for counts, sources and
 licences. The split for every image is listed in `data/manifest.csv`.
