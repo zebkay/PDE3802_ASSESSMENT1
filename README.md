@@ -17,7 +17,9 @@ model is the baseline.
 
 ## Usernames.
 ng621: Nigel
+
 jmiti: Janet
+
 zebkay: Kay
 
 ## 1. Installation
